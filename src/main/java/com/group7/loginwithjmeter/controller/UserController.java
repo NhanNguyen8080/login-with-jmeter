@@ -19,39 +19,40 @@ public class UserController {
     @GetMapping("")
     public ResponseEntity<ResponseObject> getAllUsers() {
         return ResponseEntity.ok(
-                new ResponseObject("OK", "Query successfully", userService.getAllUsers())
+                new ResponseObject(userService.getAllUsers())
         );
     }
 
     @PostMapping("/login")
-    public ResponseEntity<ResponseObject> login(@RequestBody User user) {
-        if (user.getUsername().trim().isEmpty()) {
+    public ResponseEntity<ResponseObject> login(@RequestParam("username") String username,
+                                                @RequestParam("password") String password) {
+        if (username.trim().isEmpty()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                    new ResponseObject("FAILED", "Username is empty!", null)
+                    new ResponseObject("Username is empty!")
             );
         }
-        if (user.getPassword().trim().isEmpty()) {
+        if (password.trim().isEmpty()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                    new ResponseObject("FAILED", "Password is empty!", null)
+                    new ResponseObject("Password is empty!")
             );
         }
-        if (user.getUsername().trim().isEmpty() && user.getPassword().trim().isEmpty()) {
+        if (username.trim().isEmpty() && password.trim().isEmpty()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                    new ResponseObject("FAILED", "Username and password is empty!", null)
+                    new ResponseObject("Username and password is empty!")
             );
         }
-        if (userService.getUserByUsername(user.getUsername()) == null) {
+        if (!userService.getUserByUsername(username).isPresent()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                    new ResponseObject("FAILED", "Account does not exist!", null)
+                    new ResponseObject("Account does not exist!")
             );
         }
-        if (!userService.login(user.getUsername(), user.getPassword())) {
+        if (!userService.login(username, password)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                    new ResponseObject("FAILED", "Invalid password", null)
+                    new ResponseObject("Invalid password!")
             );
         }
         return ResponseEntity.status(HttpStatus.OK).body(
-                new ResponseObject("OK", "Login successfully", new String("Welcome " + user.getUsername()))
+                new ResponseObject("Login successfully")
         );
     }
 }

@@ -1,0 +1,7 @@
+username,password,msg
+thayhoangdepzai,1,Login successfully
+,1,Username is empty!
+thayhoangdepzai,,Password is empty!
+,,Username and password is empty!
+thayhoangkhotinh,1,Account does not exist!
+thayhoangdepzai,12,Invalid password!
